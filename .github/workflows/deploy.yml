@@ -20,10 +20,19 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 13.x
+          node-version: 18 # Substitua pela versão necessária para o seu projeto
+
+      - name: Clean cache
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
 
       - name: Install NPM packages
-        run: npm ci
+        run: npm install # Substituímos `npm ci` por `npm install` para regenerar o package-lock.json caso necessário
+
+      - name: Debug npm logs (em caso de falha)
+        if: failure()
+        run: cat /home/runner/.npm/_logs/*.log
 
       - name: Build project
         run: npm run build
